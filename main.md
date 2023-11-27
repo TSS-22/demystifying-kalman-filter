@@ -12,8 +12,6 @@ explain the distribution link to the variables:
 
 Add diagram of how the Kalman filter work, and put the variables where they are used, or simply when they appear on the diagrams.
 
-Correct the equation $(4)$ to account for the noise.
-
 ## Disclaimer
 
 In this work we will refer to the discrete version of the Klaman filter algorithm.
@@ -22,8 +20,6 @@ This work try to dumb the Klamn filter down to the maximun. It won't go into det
 
 The time will be refered to, through the notation $t$. It is to be noted that some text, usually the older ones, will refer to the time using the notation $k$, this will not be the case here.
 
-
-
 The following math notation is used in the present work:
 |Symbol|Signification|
 |---:|:---|
@@ -31,8 +27,9 @@ The following math notation is used in the present work:
 |$\mathbf{M}^{T}$|Transpose of the matrix $\mathbf{M}$|
 |$\mathbf{M}^{-1}$|Inverse of the matrix $\mathbf{M}$|
 |$\mathbf{M}(t)$|Matrix at time $t$|
-
-The equation $(4)$ seems to not account for the measurement noise. This is an error. 
+|$\sigma_x$|Standard deviation of the element $x$|
+|$\sigma^2_x$|Variance of the element $x$|
+|$\rho_{xy}$|Covariances of the elements $x$ and $y$|
 
 # Kalman filter
 
@@ -123,13 +120,13 @@ $$
 \begin{equation}
     \mathbf{P} = 
         \begin{pmatrix}
-             \sigma^{2}_{x_0} & \sigma_{x_0 x_1} & \cdots & \sigma_{x_0 x_n}\\
+             \sigma^{2}_{x_0} & \rho{x_0 x_1} & \cdots & \rho{x_0 x_n}\\
              \\
-             \sigma_{x_1 x_0} & \sigma^2_{x1} &  & \vdots \\
+             \rho{x_1 x_0} & \sigma^{2}_{x_1} &  & \vdots \\
              \\
              \vdots & & \ddots & \\
              \\
-             \sigma_{x_n x_0} & \cdots & & \sigma^2_{x_n}\\
+             \rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
         \end{pmatrix}
 \end{equation}
 $$
@@ -222,9 +219,9 @@ $$
 \begin{equation}
 \vec{v} \sim \mathcal{N}(
     \begin{pmatrix}
-        \bar{v_{z_1}}\\
+        \bar{v_{z_0}}\\
         \\
-        \bar{v_{z_2}}\\
+        \bar{v_{z_1}}\\
         \\
         \vdots\\
         \\
@@ -234,7 +231,7 @@ $$
 \end{equation}
 $$
 
-With $\bar{v_{z_1}}$, $\bar{v_{z_2}}$, $\dotsc$, $\bar{v_{z_n}}$, the mean of the noise from the measurements, $\vec{v}$, from the measurement vector $\vec{z}$.
+With $\bar{v_{z_0}}$, $\bar{v_{z_1}}$, $\dotsc$, $\bar{v_{z_n}}$, the mean of the noise from the measurements, $\vec{v}$, from the measurement vector $\vec{z}$.
 
 The equation $(9)$ only work of course, if your measurement noise is distributed normally (in the mathematical sense) and mean $0$, as assumed in the Kalman filter. You will have to adapt the representation of $\vec{v}$ to your application. 
 
@@ -244,9 +241,9 @@ $$
 \begin{equation}
 \vec{v}(t) = 
     \begin{pmatrix}
-        v_{z_1}(t)\\
+        v_{z_0}(t)\\
         \\
-        v_{z_2}(t)\\
+        v_{z_1}(t)\\
         \\
         \vdots\\
         \\
@@ -255,19 +252,45 @@ $$
 \end{equation}
 $$
 
-With $v_{z_1}(t)$, $v_{z_2}(t)$, $\dotsc$, $v_{z_n}(t)$, the noise from the measurements from the measurement vector $\vec{z}$.
+With $v_{z_0}(t)$, $v_{z_1}(t)$, $\dotsc$, $v_{z_n}(t)$, the noise from the measurements from the measurement vector $\vec{z}$.
 
 If you have to estimate the measurement noise and its characteristics, you will usually need to refer to the sensor documentation, which should provide you with information regarding the noise range of the sensor. Empirical experimentation might be needed to estimate the sensor noise characteristics in your application.
 
 #### $\mathbf{R}$ : Covariance matrix of the sensor noise
 
-If the measurement noise is indeed, as usually aussmed, represented by a normal distribution of mean $0$, the covariance matrix $\mathbf{R}$ would be of the form:
+The covariance matrix $\mathbf{R}$ would be of the form:
 
 $$
 \begin{equation}
+\mathbf{R} = 
+    \begin{pmatrix}
+        \sigma^{2}_{v_0} & \rho_{v_0v_1} & \cdots & \rho_{v_0v_n}\\
+        \\
+        \rho_{v_1v_0} & \sigma^{2}_{v_1} &  & \vdots \\
+        \\
+        \vdots & & \ddots & \\
+        \\
+        \rho{v_nv_0} & \cdots & & \sigma^2_{v_n}\\
+    \end{pmatrix}
 \end{equation}
 $$
 
+
+Which, if the measurements are uncorrelated between each others, is of the form:
+$$
+\begin{equation}
+\mathbf{R} = 
+    \begin{pmatrix}
+        \sigma^{2}_{v_0} & 0 & \cdots & 0\\
+        \\
+        0 & \sigma^{2}_{v_1} &  & \vdots \\
+        \\
+        \vdots & & \ddots & \\
+        \\
+        0 & \cdots & & \sigma^2_{v_n}\\
+    \end{pmatrix}
+\end{equation}
+$$
 
 
 ## Some clarification about state vector $\vec{x}$ and measurement vector $\vec{z}$
