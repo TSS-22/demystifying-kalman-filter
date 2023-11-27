@@ -290,7 +290,7 @@ If you have to estimate the measurement noise and its characteristics, you will 
 
 The covariance matrix $\mathbf{R}$ would be of the form:
 
-$$
+```math
 \begin{equation}
 \mathbf{R} = 
     \begin{pmatrix}
@@ -303,11 +303,11 @@ $$
         \rho{v_nv_0} & \cdots & & \sigma^2_{v_n}\\
     \end{pmatrix}
 \end{equation}
-$$
+```
 
 Which, if the measurements are uncorrelated between each others, is of the form:
 
-$$
+```math
 \begin{equation}
 \mathbf{R} = 
     \begin{pmatrix}
@@ -315,12 +315,12 @@ $$
         \\
         0 & \sigma^{2}_{v_1} &  & \vdots \\
         \\
-        \vdots & & & \\
+        \vdots & & \ddots & \\
         \\
         0 & \cdots & & \sigma^2_{v_n}\\
     \end{pmatrix}
 \end{equation}
-$$
+```
 
 The case could be made that the covariance matrix of the sensor noise $\mathbf{R}$, and to an extend the measurement noise vector $\vec{v}$, are could be put into the **General terms** as in the general case of the Kalman filter: normally distributed noise with a distribution mean of $0$, those variables are somewhat trivial (in the mathematical sense) to compute, especially as the measurement noise vector $\vec{v}$ is contained in the measurement vector $\vec{z}$ that we use. But, as much as we want this introduction to the application of the Kalman filter to be simple and quick, we also want it to be as thorough, to allow the dedicated reader to understand what and why each variables.
 
