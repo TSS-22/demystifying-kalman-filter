@@ -145,7 +145,7 @@ It is simply the covariance matrix linked to the state vector $\vec{x}$.
 
 It is computed as such:
 
-$$
+```math
 \begin{equation}
 \mathbf{P} = 
 \begin{pmatrix}
@@ -158,7 +158,7 @@ $$
 \rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
 \end{pmatrix}
 \end{equation}
-$$
+```
 
 With $\sigma$ the variance and therefore, $x_0, x_1, \dotsc, x_n$ the reference to the elements of the state vector $\vec{x}$. The covariance matrix $\mathbf{P}$ is calculated from the values of the state vector $\vec{x}$.
 
