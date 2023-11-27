@@ -301,6 +301,7 @@ $$
 $$
 
 Which, if the measurements are uncorrelated between each others, is of the form:
+
 $$
 \begin{equation}
 \mathbf{R} = 
