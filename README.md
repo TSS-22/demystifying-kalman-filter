@@ -12,6 +12,8 @@ Add diagram of how the Kalman filter work, and put the variables where they are 
 
 look for ADD EXAMPLE
 
+Add table of content
+
 # The myth, the Kalman, the legend: The Kalman filter
 
 An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
@@ -145,16 +147,16 @@ It is computed as such:
 
 $$
 \begin{equation}
-    \mathbf{P} = 
-        \begin{pmatrix}
-            \sigma^{2}_{x_0} & \rho{x_0 x_1} & \cdots & \rho{x_0 x_n}\\
-             & & & \\
-            \rho{x_1 x_0} & \sigma^{2}_{x_1} &  & \vdots \\
-             & & & \\
-            \vdots & & \ddots & \\
-             & & & \\
-            \rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
-        \end{pmatrix}
+\mathbf{P} = 
+\begin{pmatrix}
+\sigma^{2}_{x_0} & \rho{x_0 x_1} & \cdots & \rho{x_0 x_n}\\
+& & & \\
+\rho{x_1 x_0} & \sigma^{2}_{x_1} &  & \vdots \\
+& & & \\
+\vdots & & \ddots & \\
+& & & \\
+\rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
+\end{pmatrix}
 \end{equation}
 $$
 
