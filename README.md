@@ -315,7 +315,7 @@ $$
         \\
         0 & \sigma^{2}_{v_1} &  & \vdots \\
         \\
-        \vdots & & \ddots & \\
+        \vdots & & & \\
         \\
         0 & \cdots & & \sigma^2_{v_n}\\
     \end{pmatrix}
