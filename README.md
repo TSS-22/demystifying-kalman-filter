@@ -1,6 +1,3 @@
-# The myth, the Kalman, the legend: The Kalman filter
-An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
-
 TODO clarify the Xm, Xa and Xb with a better convention
 G and B too
 verify that matrix are correctly stylized in the equations
@@ -12,6 +9,12 @@ put in disclaimer the different names of the variables so people can read more e
 explain the distribution link to the variables:
 
 Add diagram of how the Kalman filter work, and put the variables where they are used, or simply when they appear on the diagrams.
+
+look for ADD EXAMPLE
+
+# The myth, the Kalman, the legend: The Kalman filter
+
+An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
 
 # The goal 
 
@@ -144,13 +147,13 @@ $$
 \begin{equation}
     \mathbf{P} = 
         \begin{pmatrix}
-             \sigma^{2}_{x_0} & \rho{x_0 x_1} & \cdots & \rho{x_0 x_n}\\
-             \\
-             \rho{x_1 x_0} & \sigma^{2}_{x_1} &  & \vdots \\
-             \\
-             \vdots & & \ddots & \\
-             \\
-             \rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
+            \sigma^{2}_{x_0} & \rho{x_0 x_1} & \cdots & \rho{x_0 x_n}\\
+             & & & \\
+            \rho{x_1 x_0} & \sigma^{2}_{x_1} &  & \vdots \\
+             & & & \\
+            \vdots & & \ddots & \\
+             & & & \\
+            \rho{x_n x_0} & \cdots & & \sigma^{2}_{x_n}\\
         \end{pmatrix}
 \end{equation}
 $$
@@ -238,6 +241,8 @@ $$
 
 $\mathcal{N}$ the normal distribution, and its first parameter: the mean of the distribution, here  $0$, and the second parameter the variance of the distribution, here represented by $\mathbf{R}$. 
 
+The equation above is only valid if your measurement noise is distributed normally (in the mathematical sense) and mean $0$, as assumed in the Kalman filter. You will have to adapt the representation of $\vec{v}$ to your application. 
+
 Or more generally by the normal distribution:
 
 $$ 
@@ -257,8 +262,6 @@ $$
 $$
 
 With $\bar{v_{z_0}}$, $\bar{v_{z_1}}$, $\dotsc$, $\bar{v_{z_n}}$, the mean of the noise from the measurements, $\vec{v}$, from the measurement vector $\vec{z}$.
-
-The equation $(9)$ only work of course, if your measurement noise is distributed normally (in the mathematical sense) and mean $0$, as assumed in the Kalman filter. You will have to adapt the representation of $\vec{v}$ to your application. 
 
 In the equation of the Kalman filter, the measurement noise would be of the form:
 
