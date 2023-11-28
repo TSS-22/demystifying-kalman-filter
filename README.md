@@ -1,12 +1,8 @@
-TODO clarify the Xm, Xa and Xb with a better convention
-G and B too
-verify that matrix are correctly stylized in the equations
-
 put in disclaimer that matrix can be scalar under certain circumstances, define which and when.
 
 put in disclaimer the different names of the variables so people can read more easily other texts.
 
-explain the distribution link to the variables:
+explain the distribution link aspect of the variables (That Kalman filter work on Bayesian estimation)
 
 Add diagram of how the Kalman filter work, and put the variables where they are used, or simply when they appear on the diagrams.
 
@@ -14,13 +10,15 @@ look for ADD EXAMPLE
 
 Add table of content
 
+make it clear what the state is  (the estimated state of the model. it is a mix between the estimation and the results from kalman filter: the filter provide a state estimation that is pondered by its level of trust in its underlied model F, and its measurement and associated trust, as well as control and associated trust if any controls are present)
+
 # The myth, the Kalman, the legend: The Kalman filter
 
 An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
 
 # The goal 
 
-The goal is to provide a thorough introduction to the application of the Kalman filter to the reader, so as he understand the filter algorithm and can to an extend apply it readily to his use case. The goal is also to provide a clear approach to the Kalman filter as to create a strong fondation on which the dedicated reader will be able to rely in order to dig deeper into more technical ressources on the subject of the Kalman filter.
+The goal is to provide a thorough practical introduction to the application of the Kalman filter to the reader, so as he understand the filter algorithm and can to an extend apply it readily to his use case. The goal is also to provide a clear approach to the Kalman filter as to create a strong fondation on which the dedicated reader will be able to rely in order to dig deeper into more technical ressources on the subject of the Kalman filter.
 
 In the grand scheme of thing, the goal is to help bring useful knowledge to the most people possible. 
 
@@ -75,13 +73,13 @@ The Kalman filter can be summarized into two steps: *prediction* and *correction
 
 $$
 \begin{equation}
-x_p = \mathbf{F(t)} \cdot \vec{x_m}(t) + \mathbf{G(t)} \cdot \vec{u}(t) 
+x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{G(t)} \cdot \vec{u}(t) 
 \end{equation}
 $$
 
 $$
 \begin{equation}
-\mathbf{P_p} = \mathbf{F(t)} \cdot \mathbf{P_m(t)} \cdot \mathbf{F(t)}^{T} + \mathbf{Q(t)}
+\mathbf{P_p} = \mathbf{F(t)} \cdot \mathbf{P(t)} \cdot \mathbf{F(t)}^{T} + \mathbf{Q(t)}
 \end{equation}
 $$
 
@@ -131,13 +129,13 @@ $$
 
 With $x_0, x_1, \dotsc, x_n$ being the $N$ values fed to the Kalman filter inputs.
 
-* $\vec{x_m}$: State vector measured
+* $\vec{x}(t)$: State vector at time $t$, essentially the input of the Kalman filter iteration
 
 * $\vec{x_p}$: State vector as predicted using model $\mathbf{F}$ and the control vector $\vec{u}$
 
-* $\vec{x_c}$: State vector corrected (is it the one used as $\vec{x_m}(t)$ after initialization, or do we keep using raw measurments?)
+* $\vec{x_c}$: State vector predicted and corrected by the Kalman filter, the state vector $\vec{x}(t+1)$. It is the output of the Kalman filter iteration and will be used as the state vector input $\vec{x}$ of the next Kalamn filter iteration
 
-The state vector represent the assumption we are making about the state of the model. This is not the raw measurement. The state, and therefore the state vector, depends on the pre-established model $\mathbf{F}$ that will estimate the new state of the device from $t$ to $t+1$. For example, *ADD EXAMPLE*
+The state vector represent the assumption we are making about the state of the model. This is not the raw measurements. The state, and therefore the state vector, depends on the pre-established model $\mathbf{F}$ that will estimate the new state of the system from $t$ to $t+1$ : from $\vec{x(t)}$ to $\vec{x(t+1)}$. For example, *ADD EXAMPLE*
 
 #### $\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$
 
@@ -162,7 +160,7 @@ It is computed as such:
 
 With $\sigma$ the variance and therefore, $x_0, x_1, \dotsc, x_n$ the reference to the elements of the state vector $\vec{x}$. The covariance matrix $\mathbf{P}$ is calculated from the values of the state vector $\vec{x}$.
 
-* $\mathbf{P_m}$ : the covariance matrix associated to the state vector $\vec{x_m}$
+* $\mathbf{P}(t)$ : the covariance matrix associated to the state vector $\vec{x}(t)$
 
 * $\mathbf{P_p}$ : the covariance matrix associated to the state vector $\vec{x_p}$
 
@@ -176,11 +174,51 @@ For more imformation on covariance and covariance matrix:
 
 #### $\vec{u}$ : Control vector
 
+
+
 #### $\mathbf{B}$ : Control matrix
+
+It is called $\mathbf{G}$ in some texts.
 
 #### $\mathbf{K}$ : Kalman gain
 
+
+
 #### $\vec{z}$ : Measurement vector
+
+It is the vector composed of the measurements from the sensor(s). It is o the form:
+
+$$
+\begin{equation}
+\vec{z} = 
+    \begin{pmatrix}
+        z_0\\
+        \\
+        z_1\\
+        \\
+        \vdots\\
+        \\
+        z_n\\
+    \end{pmatrix}
+\end{equation}
+$$
+
+With $z_0, z_1, \dotsc, z_n$, the measurements from the sensor(s). 
+
+It is linked to the measurement noise $\vec{v}$ and the associated covariance matrix of the sensor noise $\mathbf{R}$. More details about those two variables can be found in their respective section down below.
+
+The measurement vector has the following relation to the state vector:
+
+$$
+\begin{equation}
+\vec{z}(t) = \mathbf{H}(t) \cdot \vec{x}(t) + \vec{v}(t)
+\end{equation}
+$$
+
+With $\vec{z}$ the measurement vector, $\mathbf{H}$ the measurement matrix, $\vec{x}$ the state vector and $\vec{v}$ the measurement noise, and $t$ the time.
+
+The measurement matrix $\mathbf{H}$ will map the measurements $\vec{z}$ into the state space to the state vector $\vec{x}$, meaning that the measurement matrix $\mathbf{H}$ express the relationship between the state vector $\vec{x}$ and measurements $\vec{z}$. More details can be found about the measurement matrix $\mathbf{H}$ can be found in the corresponding section down below.
+
 
 ### Application specific terms
 
@@ -215,7 +253,19 @@ To avoid accounting for any uncertainty in the state transition model $\mathbf{F
 
 #### $\mathbf{H}$ : Measurement matrix
 
-The measurement matrix $\mathbf{H}$ is the mathematical representation of how your measurements corresponds to your state vector. 
+The measurement matrix $\mathbf{H}$ is the mathematical representation of how your measurements corresponds to your state vector. The shape of your measurement matrix $\mathbf{H}$ will therefore depend on the shape of your measurement vector $\vec{z}$ and state vector $\vec{x}$.
+
+It is made of real values, and represent the relation between, the impact of, the measurements and the state vector. A value of $1$ in the matrix means that the corresponding measurement variable correspond directly to state variable.
+
+The relation it holds between the state vector $\vec{x}$ and the measurement vector $\vec{z}$ is expressed in the following equation:
+
+$$
+\begin{equation}
+\vec{z}(t) = \mathbf{H}(t) \cdot \vec{x}(t) + \vec{v}(t)
+\end{equation}
+$$
+
+With $\vec{z}$ the measurement vector, $\mathbf{H}$ the measurement matrix, $\vec{x}$ the state vector and $\vec{v}$ the measurement noise, and $t$ the time.
 
 #### $\vec{v}$ : Measurement noise
 
@@ -241,7 +291,7 @@ $$
 \end{equation}
 $$
 
-$\mathcal{N}$ the normal distribution, and its first parameter: the mean of the distribution, here  $0$, and the second parameter the variance of the distribution, here represented by $\mathbf{R}$. 
+$\mathcal{N}$ the normal distribution, and its first parameter: the mean of the distribution, here  $0$, and its second parameter the variance of the distribution, here represented by $\mathbf{R}$. 
 
 The equation above is only valid if your measurement noise is distributed normally (in the mathematical sense) and mean $0$, as assumed in the Kalman filter. You will have to adapt the representation of $\vec{v}$ to your application. 
 
@@ -328,9 +378,7 @@ The case could be made that the covariance matrix of the sensor noise $\mathbf{R
 
 explain that x and z don't have to be specifically measurement and statish, and it depend on the architecture of the filter.
 
-## Initialisation of the Kalman filter
-
-# Rundown
+# Initialisation of the Kalman filter
 
 # Sources and recommended reads
 

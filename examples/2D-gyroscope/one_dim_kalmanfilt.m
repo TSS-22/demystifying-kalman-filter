@@ -1,89 +1,51 @@
-% Why oned ? one dimension ?
 %% Single discrete time Kalman filter iteration
-% Explain all the parameters below
-% What is process ?
-% Which models ?
-% Why covariance matrix on the noise ?
-% Where is the trust information ?
-% F, G = model equations
-%    Q = process noise covariance matrix
-%    H = matrix for the measurement equation
-%    R = measurement noise covariance matrix
-%    
-% During each iteration the following parameters changes ==>
-% What does state vector and its covariance matrix mean ?
-%
-%   from the previous iteration of the algorithm:
-%       x = state vector
-%       P = covariance matrix of the state vector
-% 
-%   from (newly?) received parameters:
-%       u = vector input (current)
-%       z = measurements vector (current)
-% 
-% From this parameters, the filter perform two steps:
-%   - Prediction
-%   - Correction
-% 
-% Then it returns:
-% find a better way to express the idea behind POSTERIOR
-%   xA = posterior estimation of the state vector
-%   PA = covariance matrix of the posterior estimation of the state vector
-%   KG = KG matrix (what is it?)
-%
-% Is the posterior estimation the results that needs to be used as the new
-% state vector ? (aka here, inclination/ angular movement/angular
-% displacement, whatever we measure and try to filter?)
-%
 
-function [PA, xA, KG] = one_dim_kalmanfilt(F, G, Q, H, R, P, x, u, z)
+%% INPUT PARAMETERS
+% x_t : State vector input
+% P_t : Covariance matrix of the state vector input
+% F : State transition model
+% B : Control matrix 
+% u : Control vector
+% Q : Covariance matrix of the process noise
+% H : Measurement matrix
+% R : Covariance matrix of the sensor noise
+% z : Measurement vector
+
+%% OUTPUT PARAMETERS
+% x_c : Predicted and corrected state vector
+% P_c : Covariance matrix of the predicted and corrected state vector (x_c)
+%   K : Kalman gain
+
+function [x_c, P_c, K] = one_dim_kalmanfilt(x_t, P_t, F, B, u, Q, H, R, z)
 %% PREDICTION PHASE
-% Using the MODEL (which one?)
-% eq 8.1
-% The MODEL predicts the new state vector (x)
-%
-% What is F and FT?
-% Which model?
-FT = transpose(F);
-% What is G, u and xM?
-xM = F * x + G * u;
+% eq (1)
+% We predict the new state vector (x_p) from the state transition model (F) applied to the state vector at t (x_t),
+% and the control vector (u) and the associated control matrix (B)
+x_p = F * x_t + B * u;
 
-% eq 8.2
-% The MODEL predicts the new covariance matrix (P) of the state vector (x)
-% What is PM, F, P, Q?
-PM = F * P * FT + Q;
-
-
-%% PHASE TRANSITION
-% we change the state vector (x) and its covariance matrix (P) by their
-% newly MODEL predicted values
-xB = xM; % eq 8.3
-PB = PM; % eq 8.4
-
+% eq (2)
+% We predict the covariance matrix (P_p) of the predicted state vector (x_p),
+% using the state transition model (F), the covariance matrix (P_t) of the state vector at t (x_t),
+% and the covariance matrix of the process noise (Q)
+P_p = F * P_t * transpose(F) + Q;
 
 %% CORRECTION/UPDATE PHASE
-% The goal here, is to find posterior parameters values (A = after)
-% from the anterior (B = before) parameters values,
-% through Bayesian estimation
-%
-% What is HT, H?
-HT = transpose(H);
+% eq (3)
+% We calculate the Kalman gain (K), using the covariance matrix (P_p) of the predicted state vector (x_p),
+% the measurement matrix (H), and the covariance matrix of the sensor noise (R)   
+K = P_p * transpose(H) * (inv(H * P_p * transpose(H) + R));
 
-% 1- Calculate the Kalman gain (KG)
-% What is it the Kalman gain ?
-%
-% eq 8.5
-KG = PB * HT * (inv(H * PB * HT + R));
+% eq (4)
+% We calculate the output state vector (x_c) of the present Kalman filter iteration,
+% by correcting the predicted state vector (x_p) with measurement vector (z), and the measurement matrix
+% to which the the Kalman gain (K) was applied  
+x_c = x_p + K * (z - H * x_p);
 
-% 2- Calculate POSTERIOR ESTIMATE of the state vector (x)
-%
-% eq 8.6
-xA = xB + KG * (z - H * xB);
-
-% 3- Calculate POSTERIOR ESTIMATE of state vector (x) covariance matrix (P)
-%
-% eq 8.7
-PA = PB - KG * H * PB;
-
+% eq (5)
+% We calculate the covariance matric (P_c) of the corrected estimated state vector, 
+% which is the state vector at t+1 (x_c),
+% using the covariance matrix (P_p) of the predicted state vector (x_p),
+% the Kalman gain (K) and the measurement matrix (H) 
+P_c = P_p - K * H * P_p;
 
 end
