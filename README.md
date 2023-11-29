@@ -1,3 +1,9 @@
+clean the main file from the example
+
+clean the name of the data file
+Add header to the data file
+What is stillness ? Should I discard ti
+
 put in disclaimer that matrix can be scalar under certain circumstances, define which and when.
 
 put in disclaimer the different names of the variables so people can read more easily other texts.
