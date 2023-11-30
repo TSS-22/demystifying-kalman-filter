@@ -400,6 +400,7 @@ $$
 vel(t+1) \approx vel(t) + acc(t) * \Delta t
 \end{equation}
 $$
+
 $$
 \begin{equation}
 x(t+1) \approx x(t) + vel(t) * \Delta t + \frac{acc(t)}{2} * \Delta t^2
@@ -415,11 +416,11 @@ $$
 
 With
 
-* $\mathbf{F}$, the state transition model, equal to $\begin{pmatrix}
+* $\mathbf{F}$, the state transition model, equal to ```math\begin{pmatrix}
 1 & \Delta t\\ 
 \\ 
 0 & 1\\ 
-\end{pmatrix}$, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
+\end{pmatrix}```, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
 
 * For sake of simplicity, we will assume the oexternak sources of uncertainity $\vec{\omega}$ to be null
 
