@@ -79,7 +79,7 @@ The Kalman filter can be summarized into two steps: *prediction* and *correction
 
 $$
 \begin{equation}
-x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{G(t)} \cdot \vec{u}(t) 
+x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\omega}
 \end{equation}
 $$
 
@@ -112,9 +112,17 @@ $$
 
 ## Terms definitions
 
-### General terms
+Some of the following variables are not measured or calculated from measurements and/or associated logic. Therefore, they have to be establish by the operator: you. This is where the difficulties in using and establishing a good, accurate and valuable Kalman filter lie. It requires theorethical knowledge about the system of interest, but also theoretical knowledge theoretical domains related to the field of the system of interest, as well as pratical, field knowledge of the system of interest, most of the time gained through field study.
 
-#### $x$ : State vector
+The modelling choice will be dependent, to an extend, on the operator choice with the consequences they imply. Be sure to put the adequat level of care and research for your application.
+
+The following domains can be of interest in the task of developping adequat values for the following variables:
+* Point estimation theory
+* Linear Modelling
+* Non-linear modelling
+* Time variant modelling
+
+### $x$ : State vector
 
 It is of the form:
 
@@ -143,7 +151,7 @@ With $x_0, x_1, \dotsc, x_n$ being the $N$ values fed to the Kalman filter input
 
 The state vector represent the assumption we are making about the state of the model. This is not the raw measurements. The state, and therefore the state vector, depends on the pre-established model $\mathbf{F}$ that will estimate the new state of the system from $t$ to $t+1$ : from $\vec{x(t)}$ to $\vec{x(t+1)}$. For example, *ADD EXAMPLE*
 
-#### $\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$
+### $\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$
 
 It is simply the covariance matrix linked to the state vector $\vec{x}$.
 
@@ -178,19 +186,11 @@ For more imformation on covariance and covariance matrix:
 * [Covariance](https://fr.wikipedia.org/wiki/Covariance)
 * [Covariance matrix](https://en.wikipedia.org/wiki/Covariance_matrix)
 
-#### $\vec{u}$ : Control vector
+### $\mathbf{K}$ : Kalman gain
 
 
 
-#### $\mathbf{B}$ : Control matrix
-
-It is called $\mathbf{G}$ in some texts.
-
-#### $\mathbf{K}$ : Kalman gain
-
-
-
-#### $\vec{z}$ : Measurement vector
+### $\vec{z}$ : Measurement vector
 
 It is the vector composed of the measurements from the sensor(s). It is o the form:
 
@@ -225,21 +225,7 @@ With $\vec{z}$ the measurement vector, $\mathbf{H}$ the measurement matrix, $\ve
 
 The measurement matrix $\mathbf{H}$ will map the measurements $\vec{z}$ into the state space to the state vector $\vec{x}$, meaning that the measurement matrix $\mathbf{H}$ express the relationship between the state vector $\vec{x}$ and measurements $\vec{z}$. More details can be found about the measurement matrix $\mathbf{H}$ can be found in the corresponding section down below.
 
-
-### Application specific terms
-
-The following variables are not measured or calculated from measurement and associated logic. Therefore, they have to be establish by the operator: you. This is where the difficulties in using and establishing a good, accurate and valuable Kalman filter lie. It requires theorethical knowledge about the system of interest, but also theoretical knowledge theoretical domains related to the field of the system of interest, as well as pratical, field knowledge of the system of interest, most of the time gained through field study.
-
-The modelling choice will be dependent, to an extend, on the operator choice with the consequences they imply. Be sure to put the adequat level of care and research for your application.
-
-The following domains can be of interest in the task of developping adequat values for the following variables:
-* Point estimation theory
-* Linear Modelling
-* Non-linear modelling
-* Time variant modelling
-
-
-#### $\mathbf{F}$ : State transition model
+### $\mathbf{F}$ : State transition model
 
 State that F is the transition to point in time t to t+1 
 
@@ -249,7 +235,7 @@ This would be the case for example when you try to assess the attitude (the stat
 
 As any other applications specific terms, you will have to provide it yourself, through theoretical and/or empirical knowledge. 
 
-#### $\mathbf{Q}$ : Covariance matrix of the process noise
+### $\mathbf{Q}$ : Covariance matrix of the process noise
 
 This is the covariance matrix associated to the state transition model $\mathbf{F}$. It represents the uncertainty, or simply the variability, of the model $\mathbf{F}$ and the associated prediction. The larger the values composing $\mathbf{Q}$, the more variability, uncertainty, is present in the state transition model $\mathbf{F}$. And therefore, the less trust is put in it, and his weight into the calculus of the filtered value will be lowered.
 
@@ -257,7 +243,7 @@ One way to solve the problem in a brute force manner might be to establish this 
 
 To avoid accounting for any uncertainty in the state transition model $\mathbf{F}$, it is always possible to resort to the use of a zero matrix, $\mathbf{0}$ of adequat size.
 
-#### $\mathbf{H}$ : Measurement matrix
+### $\mathbf{H}$ : Measurement matrix
 
 The measurement matrix $\mathbf{H}$ is the mathematical representation of how your measurements corresponds to your state vector. The shape of your measurement matrix $\mathbf{H}$ will therefore depend on the shape of your measurement vector $\vec{z}$ and state vector $\vec{x}$.
 
@@ -273,7 +259,7 @@ $$
 
 With $\vec{z}$ the measurement vector, $\mathbf{H}$ the measurement matrix, $\vec{x}$ the state vector and $\vec{v}$ the measurement noise, and $t$ the time.
 
-#### $\vec{v}$ : Measurement noise
+### $\vec{v}$ : Measurement noise
 
 As the measurement noise $\vec{v}$ will, very most likely, be already integrated in your measurements in the measurement vector $\vec{z}$, you should only be concerned by the characteristics of the noise when "simply" applying the Kalman filter, and not the noise itself.
 
@@ -342,7 +328,7 @@ With $v_{z_0}(t)$, $v_{z_1}(t)$, $\dotsc$, $v_{z_n}(t)$, the noise from the meas
 
 If you have to estimate the measurement noise and its characteristics, you will usually need to refer to the sensor documentation, which should provide you with information regarding the noise range of the sensor. Empirical experimentation might be needed to estimate the sensor noise characteristics in your application.
 
-#### $\mathbf{R}$ : Covariance matrix of the sensor noise
+### $\mathbf{R}$ : Covariance matrix of the sensor noise
 
 The covariance matrix $\mathbf{R}$ would be of the form:
 
@@ -380,11 +366,93 @@ Which, if the measurements are uncorrelated between each others, is of the form:
 
 The case could be made that the covariance matrix of the sensor noise $\mathbf{R}$, and to an extend the measurement noise vector $\vec{v}$, are could be put into the **General terms** as in the general case of the Kalman filter: normally distributed noise with a distribution mean of $0$, those variables are somewhat trivial (in the mathematical sense) to compute, especially as the measurement noise vector $\vec{v}$ is contained in the measurement vector $\vec{z}$ that we use. But, as much as we want this introduction to the application of the Kalman filter to be simple and quick, we also want it to be as thorough, to allow the dedicated reader to understand what and why each variables.
 
-## Some clarification about state vector $\vec{x}$ and measurement vector $\vec{z}$
+### $\vec{u}$ : Control vector
 
-explain that x and z don't have to be specifically measurement and statish, and it depend on the architecture of the filter.
+This represent the control applied to the system of interest, susceptible to change the state vector $\vec{x}$ evolution dynamics. More simply, this is the influence voluntarily applied to the system, $\vec{u}$, to induce changes to the state vector $\vec{x}$. 
+
+For example, suppose our system is a free falling rocket. The state vector $\vec{x}$ representing the position, the controle vector $\vec{u}$ would be the acceleration applied by the rocket thrust engines, and applying changes to the system outside of its premiere definition : a free falling object, a system with constant parameters.
+
+It works a bit in the same way as the measurement matrix $\mathbf{H}$ in that it maps the control vector $\vec{u}$ values to the state space of the state vector $\vec{x}$ as well as the magnitude of the influence of the control vector $\vec{u}$.
+
+### $\mathbf{B}$ : Control matrix
+
+The control matrix $\mathbf{B}$ maps the control vector $\vec{u}$ to the state space of the state vector $\vec{x}$ and define, scale, the magnitude of the impact of the control vector $\vec{u}$ inputs, values.
+
+It is sometimes called $\mathbf{G}$ in ressources on Kalman filter.
+
+for example, let say we are interested in the velocity and the position of a system. It will be expressed by the following state vector:
+
+$$
+\begin{equation}
+\vec{x} = 
+    \begin{pmatrix}
+        pos(t)\\
+        \\
+        vel(t)\\
+    \end{pmatrix}
+\end{equation}
+$$
+
+We know that the discrete velocity and position are computed using the following equation: 
+
+$$
+\begin{equation}
+vel(t+1) \approx vel(t) + acc(t) * \Delta t
+\end{equation}
+$$
+$$
+\begin{equation}
+x(t+1) \approx x(t) + vel(t) * \Delta t + \frac{acc(t)}{2} * \Delta t^2
+\end{equation}
+$$
+The predicted transition from $\vec{x(t)}$ to $\vec{x(t+1)}$ will be made through the equation :
+
+$$
+\begin{equation}
+x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\omega}
+\end{equation}
+$$
+
+With
+
+* $\mathbf{F}$, the state transition model, equal to $\begin{pmatrix}
+1 & \Delta t\\
+\\
+0 & 1\\
+\end{pmatrix}$, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
+
+* For sake of simplicity, we will assume the oexternak sources of uncertainity $\vec{\omega}$ to be null
+
+* For the sake of the argument, the control vector $\vec{u}$ will be of the form of a scalar (a non composite value, a singular value): $\vec{u}(t) = a(t)$, $a(t)$ an arbitrary value of acceleration. The exact value doesn't matter in this case.
+
+In this case the control matrix would be, according to the physic formula stated above:
+
+$$
+\begin{equation}
+\mathbf{B} = 
+    \begin{pmatrix}
+        \frac{1}{2} \cdot \Delta t^2\\
+        \\
+        \Delta t\\
+    \end{pmatrix}
+\end{equation}
+$$
+
+Again, as with any application specific variables, you will have to design your control matrix $\mathbf{B}$ in a way that is adequat to your system and needs.
+
+### $\vec{\omega}$ : External sources of uncertainity
+
+It represent the sources of uncertainity that may influence the dynamic of the state vector from one $t$ to the other.
+
+This parameter is sometimes included, or even entierely represented by the control vector $\vec{u}$, or sometimes absent from the Kalman filter equations.
 
 # Initialisation of the Kalman filter
+
+go through a little rundown text and then variable by variable?
+
+# Example
+
+example with the governement
 
 # Sources and recommended reads
 

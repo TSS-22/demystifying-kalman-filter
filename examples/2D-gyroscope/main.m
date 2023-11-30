@@ -12,6 +12,7 @@ clear all
 % Stay simple in the explanation and if it is more than one line, just put it in the README.md
 % For example, for the angles calculation, and the quaternions
 % verify that the Euler angles computed from the accelerometer reading are really one of and not some kind of cumulative state aka attitude of the system
+% Make sure the example still works
 
 %% FOREWORDS AND DISCLAIMER
 % This example is an example present in the book Intuitive Understanding of Kalman Filtering with MATLAB®

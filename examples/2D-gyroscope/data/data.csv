@@ -1,4 +1,4 @@
-timestamps,stillness,gyroscope_x,gyroscope_,,,,,,,,,,,
+time_stamps,stillness,gyroscope_x,gyroscope_y,gyroscope_z,accelerometer_x,accelerometer_y,accelerometer_z,quaternion_0,quaternion_1,quaternion_2,quaternion_3,magnetometer_x,magnetometer_y,magnetometer_z
 0,0.942637,-0.000329,0.007348,-0.01088,0.007535,1.024309,-0.002848,0.005635,-0.003129,-0.003116,0.999974,-0.023345,-0.341473,-0.322196
 0.00286,0.963356,-0.013767,0.00124,-0.012102,0.005901,1.019144,-0.00031,0.005623,-0.003105,-0.003137,0.999974,-0.022446,-0.339473,-0.317302
 0.006654,0.952666,-0.027206,0.012235,-0.008437,0.005222,1.021819,-0.001354,0.005575,-0.003066,-0.003151,0.999975,-0.023332,-0.337384,-0.319274
