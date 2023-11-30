@@ -417,11 +417,7 @@ x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\om
 
 With
 
-* $\mathbf{F}$, the state transition model, equal to ```math \begin{pmatrix}
-1 & \Delta t\\ 
-\\ 
-0 & 1\\ 
-\end{pmatrix} ```, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
+* $\mathbf{F}$, the state transition model, equal to $\begin{pmatrix}1 & \Delta t\\\\0 & 1\\\end{pmatrix}$, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
 
 * For sake of simplicity, we will assume the oexternak sources of uncertainity $\vec{\omega}$ to be null
 
