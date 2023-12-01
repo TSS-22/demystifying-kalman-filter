@@ -456,6 +456,7 @@ x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\om
 With
 
 * $\mathbf{F}$, the state transition model is the the expression of the physic formula described above, and therefore add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. It is equat to
+
 $$
 \begin{pmatrix}
     1 & \Delta t\\
