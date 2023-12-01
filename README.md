@@ -18,6 +18,8 @@ Add table of content
 
 make it clear what the state is  (the estimated state of the model. it is a mix between the estimation and the results from kalman filter: the filter provide a state estimation that is pondered by its level of trust in its underlied model F, and its measurement and associated trust, as well as control and associated trust if any controls are present)
 
+Find a solution to display the F matrix in the example for the control matrix
+
 # The myth, the Kalman, the legend: The Kalman filter
 
 An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
@@ -188,7 +190,43 @@ For more imformation on covariance and covariance matrix:
 
 ### $\mathbf{K}$ : Kalman gain
 
+It is computed through the equation:
 
+$$
+\begin{equation}
+\mathbf{K} = \mathbf{P_p} \cdot \mathbf{H}^T \cdot (\mathbf{H} \cdot \mathbf{P_p} \cdot \mathbf{H}^T + \mathbf{R})^{-1}
+\end{equation}
+$$
+
+It dictate the balance of how much measurement, from the measurement vector $\vec{z}$, and estimate, from the predicted state vector $\vec{x}$, are used to create the new state vector $\vec{x}(t+1)$, the estimated **and** corrected state vector.
+
+A nice approach to understand that balance relationship between measurement ($\vec{z}$) and state ($\vec{x}$) ruled by the Kalman gain, [is to look at its limit behavior after rewriting the equation](https://dsp.stackexchange.com/questions/2347/how-to-understand-kalman-gain-intuitively). 
+
+So going from the equation given above we can write the Kalman gain as:
+
+$$
+\begin{equation}
+\mathbf{K} = \frac{\mathbf{P}_p \cdot \mathbf{H}^T}{\mathbf{H} \cdot \mathbf{P}_p \cdot \mathbf{H}^T + \mathbf{R}}
+\end{equation}
+$$
+
+Which give us two important limits:
+
+$$
+\begin{equation}
+\lim\limits_{\mathbf{P} \to 0} \frac{\mathbf{P}_p \cdot \mathbf{H}^T}{\mathbf{H} \cdot \mathbf{P}_p \cdot \mathbf{H}^T + \mathbf{R}} = 0
+\end{equation}
+$$
+
+Basically meaning, if the state vector $\vec{x}$ don't present a lot of uncertainity: we have a lot of trust in it, (this being expressed by a low magnitude covariance matrix of the state vector $\mathbf{P}$) will yield a low value of the Kalman gain: the filter will bias toward the state vector $\vec{x}$ value. While on the opposite, if their is a lot of uncertainty, therefore low trust, in the state vector values ($\vec{x}$), then the value of the Kalman gain will be high, which will bias the Kalman filter toward the measurement vector $\vec{z}$ values.
+
+$$
+\begin{equation}
+\lim\limits_{\mathbf{R} \to 0} \frac{\mathbf{P}_p \cdot \mathbf{H}^T}{\mathbf{H} \cdot \mathbf{P}_p \cdot \mathbf{H}^T + \mathbf{R}}= \mathbf{H}^{-1}
+\end{equation}
+$$
+
+At the same time, if the state vector is know accurately $\mathbf{H} \cdot \mathbf{P}_p \cdot \mathbf{H}^T$ is small, and therefore, if the measurements are not certains, we have low trust in them, as expressed by the covariance matrix of the sensor noise $\mathbf{R}$, it will yield a lower value of $\mathbf{K}$, biasing the Kalman filter towards the state vector $\vec{x}$ values. It can be said that from those equations, it appears that the Kalman filter seems like it have a slight bias toward the state vector $\vec{x}$ values, but a more serious work on the Kalman gain limits (in the mathematical sense) would be needed to confirm or infirm this last statement.
 
 ### $\vec{z}$ : Measurement vector
 
@@ -417,7 +455,10 @@ x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\om
 
 With
 
-* $\mathbf{F}$, the state transition model, equal to $\begin{pmatrix}1 & \Delta t\\ & \\ 0 & 1\\ \end{pmatrix}$, as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
+* $\mathbf{F}$, the state transition model, equal to 
+$
+\begin{pmatrix}1 & \Delta t\\ & \\ 0 & 1\\ \end{pmatrix}
+$ as it add the distance travelled during $\Delta t$ at the velocity $vel(t)$ from the state vector $\vec{x}(t)$, and keep the velocity the same. This is the simply the expression of the physic formula described above.
 
 * For sake of simplicity, we will assume the oexternak sources of uncertainity $\vec{\omega}$ to be null
 
@@ -463,3 +504,5 @@ The rumors say that **Anna** got them in her **archive**.
 * STROUD, Kenneth Arthur et BOOTH, Dexter J. [Engineering mathematics](https://books.google.fr/books?hl=fr&lr=&id=ihlHEAAAQBAJ&oi=fnd&pg=PR4&dq=Engineering+Mathematics&ots=gtYs78qCCp&sig=ZEYlavfulfbGAY6DikNuDGrBQBs&redir_esc=y#v=onepage&q=Engineering%20Mathematics&f=false). ISBN-13: 978-1352010275. Bloomsbury Publishing, 2020.<br>Extremely valuable ressource to learn the basic mathematics to enter confidently the realm of science and engineering level mathematics. This book could teach mathematics to a monkey.
 
 * STROUD, Kenneth Arthur et BOOTH, Dexter J. [Advanced engineering mathematics](https://www.tandfonline.com/doi/full/10.1080/00401706.2021.1982287). ISBN-13: 978-1352010251. Bloomsbury Publishing, 2020.<br>For the nerdy monkey.
+
+* [How to understand Kalman gain intuitively?](https://dsp.stackexchange.com/questions/2347/how-to-understand-kalman-gain-intuitively). Answers: Jav_Rock, Zichao Zhang, ssk08. June 2012.<br> A nice view at the Kalman gain behavior to understand its mathematical purpose.
