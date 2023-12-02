@@ -1,30 +1,53 @@
-clean the main file from the example
+# TODO
 
-clean the name of the data file
-Add header to the data file
-What is stillness ? Should I discard ti
+* Finish cleaning the main example file
 
-put in disclaimer that matrix can be scalar under certain circumstances, define which and when.
+* Add table of content
 
-put in disclaimer the different names of the variables so people can read more easily other texts.
+* Add the governement example
 
-explain the distribution link aspect of the variables (That Kalman filter work on Bayesian estimation)
+* Add a readme to the example
 
-Add diagram of how the Kalman filter work, and put the variables where they are used, or simply when they appear on the diagrams.
+* Check that the example still work from the get go on matlab
 
-look for ADD EXAMPLE
-
-Add table of content
-
-make it clear what the state is  (the estimated state of the model. it is a mix between the estimation and the results from kalman filter: the filter provide a state estimation that is pondered by its level of trust in its underlied model F, and its measurement and associated trust, as well as control and associated trust if any controls are present)
-
-Find a solution to display the F matrix in the example for the control matrix
+* Add a "variable is of the form" example where possible for each variable (go through the example matlab files to do that)
 
 # The myth, the Kalman, the legend: The Kalman filter
 
-An attempt at demystifying the Kalman filter, in order to stop making it look more complex than it is.
+An attempt at demystifying the application of the Kalman filter, in order to stop making it look more complex than it is.
 
-# The goal 
+# Table of Content
+
+1. [The goal](#the-goal)
+2. [Not the goal](#not-the-goal)
+3. [How you can help](#how-you-can-help)
+4. [Demystifying the Kalman filter](#demystifying-the-kalman-filter-algorithm)
+    1. [Disclaimer](#disclaimer)
+5. [Le Kalman filter](#le-kalman-filter)
+    1. [Context](#context)
+    2. [Steps](#steps)
+        1. [Prediction](#prediction)
+        2. [Correction/Update](#correction/update)
+    3. [Terms definitions](#terms-definitions)
+        1. [$x$ : State vector]()
+        2. [$\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$]()
+        3. [$\mathbf{K}$ : Kalman gain]()
+        4. [$\vec{z}$ : Measurement vector]()
+        5. [$\mathbf{F}$ : State transition model]()
+        6. [$\mathbf{Q}$ : Covariance matrix of the process noise]()
+        7. [$\mathbf{H}$ : Measurement matrix]()
+        8. [$\vec{v}$ : Measurement noise]()
+        9. [$\mathbf{R}$ : Covariance matrix of the sensor noise]()
+        10. [$\vec{u}$ : Control vector]()
+        11. [$\mathbf{B}$ : Control matrix]()
+        12. [$\vec{\omega}$ : External noise, sources of uncertainity]()
+6. [Initialisation of the Kalman filter](#initialisation-of-the-kalman-filter)
+7. [Diagram and example](#diagram-and-example)
+8. [Sources and recommended reads](#sources-and-recommended-reads)
+
+
+
+# The goal
 
 The goal is to provide a thorough practical introduction to the application of the Kalman filter to the reader, so as he understand the filter algorithm and can to an extend apply it readily to his use case. The goal is also to provide a clear approach to the Kalman filter as to create a strong fondation on which the dedicated reader will be able to rely in order to dig deeper into more technical ressources on the subject of the Kalman filter.
 
@@ -46,7 +69,7 @@ Now let's get to business.
 
 ## Disclaimer
 
-In this work we will refer to the discrete version of the Klaman filter algorithm.
+In this work we will refer to the discrete version of the Klaman filter algorithm. As it is hard to explain all the Kalman filter parts in isolation, we strongly invite the reader to go through all the material presented here before coming back again to the part that could be unclear during their first read. 
 
 This work try to dumb the Klamn filter down to the maximun. It won't go into details, but aims to provide a good understanding of the different parts of the algorithm, and wherever possible, underlying principles. The goal is to allow the maximum of people to try to grasp the concept, even people with limited mathematical background. It will be made as so the reader have very limited need to look at other material while going through this one. In order to do so, steps and terms will explained in a manner that can seems repeating and a bit cumbersome.
 
@@ -151,7 +174,9 @@ With $x_0, x_1, \dotsc, x_n$ being the $N$ values fed to the Kalman filter input
 
 * $\vec{x_c}$: State vector predicted and corrected by the Kalman filter, the state vector $\vec{x}(t+1)$. It is the output of the Kalman filter iteration and will be used as the state vector input $\vec{x}$ of the next Kalamn filter iteration
 
-The state vector represent the assumption we are making about the state of the model. This is not the raw measurements. The state, and therefore the state vector, depends on the pre-established model $\mathbf{F}$ that will estimate the new state of the system from $t$ to $t+1$ : from $\vec{x(t)}$ to $\vec{x(t+1)}$. For example, *ADD EXAMPLE*
+The state vector represent the assumption we are making about the state of the model. This is not the raw measurements. The state, and therefore the state vector, depends on the pre-established model $\mathbf{F}$ that will estimate the new state of the system from $t$ to $t+1$ : from $\vec{x(t)}$ to $\vec{x(t+1)}$. It could be for example the velocity and position of your robot.
+
+The state is an estimation of the system state. It is built through the estimation from the state from previous $t$, $\vec{x}(t)$, the estimation from the state transition model, $\mathbf{F}(t)$, mitigated by the control(s), $\vec{u}$ applied to the system, and the external noise/perturbations not accounted by the state transition model, $\vec{\omega}$. All those, being mitigated by their respective level of uncertainty/trust, $\mathbf{B}, \mathbf{P}, \mathbf{Q}, mathbf{R}$, and the measurements $\vec{z}$ made about the system.
 
 ### $\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$
 
@@ -484,7 +509,7 @@ $$
 
 Again, as with any application specific variables, you will have to design your control matrix $\mathbf{B}$ in a way that is adequat to your system and needs.
 
-### $\vec{\omega}$ : External sources of uncertainity
+### $\vec{\omega}$ : External noise, sources of uncertainity
 
 It represent the sources of uncertainity that may influence the dynamic of the state vector from one $t$ to the other.
 
@@ -492,11 +517,21 @@ This parameter is sometimes included, or even entierely represented by the contr
 
 # Initialisation of the Kalman filter
 
-go through a little rundown text and then variable by variable?
+The initialisation of the Kalman filter is going to be an important step but also very application specific.
 
-# Example
+The variables consituing the Kalman filter will have to be found, or one could say intitialised, via theoretical and empirical means, the state vector $\vec{x}$ might even have to be chosen arbitrarily, and is somewhat apart from the rest of the variables for that.
+
+Indeed, for example, let's say you have a robot needing to travel through a maze, just like a [micro mouse](https://en.wikipedia.org/wiki/Micromouse) robot. You choose to use a Kalman filter to estimate the position and velocity of the robot: your state vector $\vec{x}$. You could decide that the state vector $\vec{x}$ is initiated at the values of *position* $(0,0,0)$ and velocity *0*. The velocity make sense as your robot is, allegedly starting from a stopped position, but the position initiale state of $(0,0,0)$ is arbitrary: it just fit your needs, your application better.
+
+The initial value of the state vector $\vec{x}$ really has this very obvious arbitrary aspect to it. But all the other *application specific* variables also have this arbritrary aspect: you build them, the models, the covariance matrices, etc... from theoretical and practical, empirical knowledge about your application and needs. This is where the line will be drawn between a good and a bad filter design: knowledge about the system and its domain of application and your ability to apply that knowledge adequatly. This is where the difficulty of the Kalman filter really lies.
+
+Learn your system, study it. And just try. Build a safe and adequat experimental setup to be able to try out hypothesis about your system, your application and their practical application. Fail there rather than when guiding that multi millions rocket. Taxpayer around your country will thank you.
+
+# Diagram and example
 
 example with the governement
+
+![Kalman filter diagram](kalman_diagrams.png)
 
 # Sources and recommended reads
 

@@ -1,18 +1,20 @@
 close all
 clear all
 %%%%%%%%%%%%% TODO %%%%%%%%%%%%%
-% change dt to actual dt values for each steps, start on the second sample as t+1, so you can get t1-t0 for the dt
 % how to find omega
 % why the normalization of acc values
-% Explain how to find the state transition model (F)
-% Cite the source for the accelerometer to angles reading, and check if this is angular speed or displacement that is calculated 
 % For phi, theta and psi, change them to pitch yaw and roll
-% Explain why the covariance matrix is of interest in the results
-% Explain why the Kalman gain value too
 % Stay simple in the explanation and if it is more than one line, just put it in the README.md
 % For example, for the angles calculation, and the quaternions
 % verify that the Euler angles computed from the accelerometer reading are really one of and not some kind of cumulative state aka attitude of the system
 % Make sure the example still works
+
+%%%%%%%%%%%%%%%%%%% PUT IN THE README
+% Explain how to find the state transition model (F)
+% Cite the source for the accelerometer to angles reading, and check if this is angular speed or displacement that is calculated 
+% Explain why the covariance matrix is of interest in the results
+% Explain why the Kalman gain value too
+% Add a little bit on quaternions
 
 %% FOREWORDS AND DISCLAIMER
 % This example is an example present in the book Intuitive Understanding of Kalman Filtering with MATLAB®
@@ -83,8 +85,12 @@ store_angles = zeros(nbSamples,3);
 store_filtered_angles = zeros(nbSamples,3);
 
 %% KALMAN FILTER
-for t=1:1:nbSamples
-    dt = 1/acqFreq; %%%%%%%%%%% CHANGE THAT TO REAL VALUE
+for t=1:1:(nbSamples-1)
+    % For delta t, we use the actual duration of the state t --> t+1
+    % Therefore we discard the last sample of our data to not encounter an out of bound error
+    % Average dt = 0.0038769372115618167 seconds;
+    dt = timeStamps(t+1)-timeStamps(t);
+    
     % Gyroscope data at time t
     gyr_x = -data_gyr(t,1);
     gyr_y = data_gyr(t,2);
@@ -127,7 +133,7 @@ for t=1:1:nbSamples
     ];
 
     % KALMAN FILTER ITERATION
-    [P_c, x_c, K] = one_dim_kalmanfilt(F,G,Q,H,R,P,x,u(t),z);
+    [P_c, x_c, K] = one_dim_kalmanfilt(F,G,Q,H,R,P,x,u,z);
     
     % Clarify that step
     filtered_phi = atan2(2*(x_c(3)*x_c(4) + x_c(1)*x_c(2)) ,...
