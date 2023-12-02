@@ -1,9 +1,3 @@
-* Finish cleaning the main example file
-
-* Add a readme to the example
-
-* Check that the example still work from the get go on matlab
-
 # The myth, the Kalman, the legend: The Kalman filter
 
 An attempt at demystifying the application of the Kalman filter, in order to stop making it look more complex than it is.

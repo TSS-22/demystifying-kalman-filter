@@ -1,20 +1,6 @@
+%% CLEAN UP BEFORE STARTUP
 close all
 clear all
-%%%%%%%%%%%%% TODO %%%%%%%%%%%%%
-% how to find omega
-% why the normalization of acc values
-% For phi, theta and psi, change them to pitch yaw and roll
-% Stay simple in the explanation and if it is more than one line, just put it in the README.md
-% For example, for the angles calculation, and the quaternions
-% verify that the Euler angles computed from the accelerometer reading are really one of and not some kind of cumulative state aka attitude of the system
-% Make sure the example still works
-
-%%%%%%%%%%%%%%%%%%% PUT IN THE README
-% Explain how to find the state transition model (F)
-% Cite the source for the accelerometer to angles reading, and check if this is angular speed or displacement that is calculated 
-% Explain why the covariance matrix is of interest in the results
-% Explain why the Kalman gain value too
-% Add a little bit on quaternions
 
 %% FOREWORDS AND DISCLAIMER
 % This example is an example present in the book Intuitive Understanding of Kalman Filtering with MATLAB®
@@ -57,6 +43,7 @@ acqFreq = nbSamples/timeStamps(end); % acquisition frequency
 % Do not use this dt
 dt = 1/acqFreq; % THIS IS WRONG, dt is inconsistent
 
+% TO-CHECK
 % The author normalized the accelerometer data
 % it might be for the quaternion transformation
 for i=1:1:nbSamples 
@@ -107,54 +94,56 @@ for t=1:1:(nbSamples-1)
     % Build the state transition model from the gyroscope reading 
     F = eye(4) + (dt/2) * omega_mat;
 
+    % TO-CHECK    
     % Calculate Euler angles from accelerometer measurement
     % Verify the models : is it the angular velocity or the angular
     % displacement that is calculated?
     acc_angle_x = data_acc_norm(t,3);
     acc_angle_y = data_acc_norm(t,1);
 
-    theta = asin(acc_angle_x);
-    phi = asin(-acc_angle_y/(cos(theta)));
-    psi = 0;
+    pitch = asin(acc_angle_x);
+    roll = asin(-acc_angle_y/(cos(pitch)));
+    yaw = 0;
 
     % Convert Euler angles into Quaternion to create the measurement vector
     z = [
-        cos(phi/2) * cos(theta/2) * cos(psi/2) +...
-            sin(phi/2)*sin(theta/2)*sin(psi/2);
+        cos(roll/2) * cos(pitch/2) * cos(yaw/2) +...
+            sin(roll/2)*sin(pitch/2)*sin(yaw/2);
         
-        sin(phi/2) * cos(theta/2) * cos(psi/2) -...
-            cos(phi/2)*sin(theta/2)*sin(psi/2);
+        sin(roll/2) * cos(pitch/2) * cos(yaw/2) -...
+            cos(roll/2)*sin(pitch/2)*sin(yaw/2);
         
-        cos(phi/2) * sin(theta/2) * cos(psi/2) +...
-            sin(phi/2)*cos(theta/2)*sin(psi/2);
+        cos(roll/2) * sin(pitch/2) * cos(yaw/2) +...
+            sin(roll/2)*cos(pitch/2)*sin(yaw/2);
         
-        cos(phi/2) * cos(theta/2) * sin(psi/2) -...
-            sin(phi/2) * sin(theta/2) * cos(psi/2)
+        cos(roll/2) * cos(pitch/2) * sin(yaw/2) -...
+            sin(roll/2) * sin(pitch/2) * cos(yaw/2)
     ];
 
     % KALMAN FILTER ITERATION
     [P_c, x_c, K] = one_dim_kalmanfilt(F,G,Q,H,R,P,x,u,z);
     
     % Clarify that step
-    filtered_phi = atan2(2*(x_c(3)*x_c(4) + x_c(1)*x_c(2)) ,...
+    filtered_roll = atan2(2*(x_c(3)*x_c(4) + x_c(1)*x_c(2)) ,...
                     1-2*(x_c(2)^2 + x_c(3)^2));
-    filtered_theta = -asin(2*(x_c(2)*x_c(4) - x_c(1)*x_c(3)));
-    filtered_psi = atan2( 2*(x_c(2)*x_c(3) + x_c(1)*x_c(4)) ,...
+    filtered_pitch = -asin(2*(x_c(2)*x_c(4) - x_c(1)*x_c(3)));
+    filtered_yaw = atan2( 2*(x_c(2)*x_c(3) + x_c(1)*x_c(4)) ,...
                     1-2*(x_c(3)^2 + x_c(4)^2));
 
+    % TO-CHECK
     % Explain the steps and explain why /2
     filtered_quaternion(t,:) = [
-        cos(filtered_phi/2) * cos(filtered_theta/2) * cos(filtered_psi/2) +...
-            sin(filtered_phi/2) * sin(filtered_theta/2) * sin(filtered_psi/2);
+        cos(filtered_roll/2) * cos(filtered_pitch/2) * cos(filtered_yaw/2) +...
+            sin(filtered_roll/2) * sin(filtered_pitch/2) * sin(filtered_yaw/2);
         
-    	sin(filtered_phi/2) * cos(filtered_theta/2) * cos(filtered_psi/2) -...
-            cos(filtered_phi/2) * sin(filtered_theta/2) * sin(filtered_psi/2);
+    	sin(filtered_roll/2) * cos(filtered_pitch/2) * cos(filtered_yaw/2) -...
+            cos(filtered_roll/2) * sin(filtered_pitch/2) * sin(filtered_yaw/2);
         
-    	cos(filtered_phi/2) * sin(filtered_theta/2) * cos(filtered_psi/2) +...
-            sin(filtered_phi/2) * cos(filtered_theta/2) * sin(filtered_psi/2);
+    	cos(filtered_roll/2) * sin(filtered_pitch/2) * cos(filtered_yaw/2) +...
+            sin(filtered_roll/2) * cos(filtered_pitch/2) * sin(filtered_yaw/2);
         
-    	cos(filtered_phi/2) * cos(filtered_theta/2) * sin(filtered_psi/2) -...
-            sin(filtered_phi/2) * sin(filtered_theta/2) * cos(filtered_psi/2)
+    	cos(filtered_roll/2) * cos(filtered_pitch/2) * sin(filtered_yaw/2) -...
+            sin(filtered_roll/2) * sin(filtered_pitch/2) * cos(filtered_yaw/2)
     ];
 
     % Store the current covariance matrix (P) of the state vector (x) diagonal
@@ -162,10 +151,11 @@ for t=1:1:(nbSamples-1)
     % Store the current Kalman gain diagonal
     store_K(1:4,t) = diag(K);
     % Store the angles from the accelerometer readings
+    % TO-CHECK
     % Clarify if it is in radian or deg
-    store_angles(t,:) = (180/pi) * [phi, theta, psi];
+    store_angles(t,:) = (180/pi) * [roll, pitch, yaw];
     % Store the Kalman filtered angles from the accelerometer readings
-    filtered_PTP(t,:) = (180/pi) * [filtered_phi, filtered_theta, filtered_psi];
+    filtered_PTP(t,:) = (180/pi) * [filtered_roll, filtered_pitch, filtered_yaw];
 
     % The newly calculated state vector (x) and associated covariance matrix (P), 
     % will be used as the input for the next iteration of the Kalman filter
@@ -220,7 +210,7 @@ title('Euler Angles from Accelerometer Measurement');
 ylabel('Angles (deg)');
 axis([timeStamps(1) timeStamps(end) -180 180]);
 set(gca,'Ytick',-180:45:180,'Xtick',0:2:50);
-legend('Phi(\phi)','Theta(\theta)','Location','BestOutside');
+legend('roll(\roll)','pitch(\pitch)','Location','BestOutside');
 
 % Euler angles of the displacement computed from the accelerometer
 % and filtered by the Kalman filter
@@ -235,7 +225,7 @@ xlabel('Time (seconds)');
 ylabel('Angles (deg)');
 axis([timeStamps(1) timeStamps(end) -180 180]);
 set(gca,'Ytick',-180:45:180,'Xtick',0:2:50);
-legend('Phi(\phi)','Theta(\theta)','Location','BestOutside');
+legend('roll(\roll)','pitch(\pitch)','Location','BestOutside');
 
 % The state of the system as estimated and corrected by the Kalman filter
 grid on;
