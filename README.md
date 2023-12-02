@@ -1,7 +1,5 @@
 * Finish cleaning the main example file
 
-* Add the governement example
-
 * Add a readme to the example
 
 * Check that the example still work from the get go on matlab
@@ -23,18 +21,18 @@ An attempt at demystifying the application of the Kalman filter, in order to sto
         1. [Prediction](#prediction)
         2. [Correction/Update](#correction/update)
     3. [Terms definitions](#terms-definitions)
-        1. [x : State vector](#state-vector)
-        2. [P : Covariance matrix of the state vector $\vec{x}$](#covariance-matrix-of-the-state-vector)
-        3. [K : Kalman gain](#kalman-gain)
-        4. [z : Measurement vector](#measurement-vector)
-        5. [F : State transition model](#state-transition-model)
-        6. [Q : Covariance matrix of the process noise](#covariance-matrix-of-the-process-noise)
-        7. [H : Measurement matrix](#measurement-matrix)
-        8. [v : Measurement noise](#measurement-noise)
+        1. [x : State vector](#x--state-vector)
+        2. [P : Covariance matrix of the state vector x](#mathbfp--covariance-matrix-of-the-state-vector-vecx)
+        3. [K : Kalman gain](#mathbfk--kalman-gain)
+        4. [z : Measurement vector](#vecz--measurement-vector)
+        5. [F : State transition model](#mathbff--state-transition-model)
+        6. [Q : Covariance matrix of the process noise](#mathbfq--covariance-matrix-of-the-process-noise)
+        7. [H : Measurement matrix](#mathbfh--measurement-matrix)
+        8. [v : Measurement noise](#vecv--measurement-noise)
         9. [R : Covariance matrix of the sensor noise](#covariance-matrix-of-the-sensor-noise)
-        10. [u : Control vector](#control-vector)
-        11. [B : Control matrix](#control-matrix)
-        12. [w : External noise, sources of uncertainity](#external-noise-sources-of-uncertainity)
+        10. [u : Control vector](#vecu--control-vector)
+        11. [B : Control matrix](#mathbfb--control-matrix)
+        12. [w : External noise, sources of uncertainity](#vecomega--external-noise-sources-of-uncertainity)
 6. [Initialisation of the Kalman filter](#initialisation-of-the-kalman-filter)
 7. [Diagram summary and meta-example](#diagram-summary-and-meta-example)
 8. [Sources and recommended reads](#sources-and-recommended-reads)
@@ -63,7 +61,7 @@ Now let's get to business.
 
 ## Disclaimer
 
-In this work we will refer to the discrete version of the Klaman filter algorithm. As it is hard to explain all the Kalman filter parts in isolation, we strongly invite the reader to go through all the material presented here before coming back again to the part that could be unclear during their first read. 
+In this work we will refer to the discrete version of the Klaman filter algorithm. As it is hard to explain all the Kalman filter parts in isolation, we strongly invite the reader to go through all the material presented here before coming back again to the part that could be unclear during their first read. For the reader that prefer to have a global view before digging in, we would recommend to read the [Diagram summary and meta-example](#diagram-summary-and-meta-example) part before starting the material as it is written.
 
 This work try to dumb the Klamn filter down to the maximun. It won't go into details, but aims to provide a good understanding of the different parts of the algorithm, and wherever possible, underlying principles. The goal is to allow the maximum of people to try to grasp the concept, even people with limited mathematical background. It will be made as so the reader have very limited need to look at other material while going through this one. In order to do so, steps and terms will explained in a manner that can seems repeating and a bit cumbersome.
 
@@ -96,12 +94,14 @@ The Kalman filter can be summarized into two steps: *prediction* and *correction
 
 ### Prediction
 
+1.
 $$
 \begin{equation}
 x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\omega}
 \end{equation}
 $$
 
+2.
 $$
 \begin{equation}
 \mathbf{P_p} = \mathbf{F(t)} \cdot \mathbf{P(t)} \cdot \mathbf{F(t)}^{T} + \mathbf{Q(t)}
@@ -111,18 +111,21 @@ $$
 
 ### Correction/Update
 
+3.
 $$
 \begin{equation}
 \mathbf{K} = \mathbf{P_p} \cdot \mathbf{H}^T \cdot (\mathbf{H} \cdot \mathbf{P_p} \cdot \mathbf{H}^T + \mathbf{R})^{-1}
 \end{equation}
 $$
 
+4.
 $$
 \begin{equation}
 \vec{x_c} = \vec{x_p} + \mathbf{K} \cdot (\vec{z} - \mathbf{H} \cdot \vec{x_p})
 \end{equation}
 $$
 
+5.
 $$
 \begin{equation}
 \mathbf{P_c} = \mathbf{P_p} - \mathbf{K} \cdot \mathbf{H} \cdot \mathbf{P_p}
@@ -525,7 +528,7 @@ Learn your system, study it. And just try. Build a safe and adequat experimental
 
 Below is a little diagram followed by the variables associated to each components.
 
-![Kalman filter diagram](kalman_diagrams.png)
+![Kalman filter diagram](./img/kalman_diagrams.png)
 
 ## Prediction phase
 
@@ -552,9 +555,9 @@ $$
 
 * **Control**: $\vec{u}(t)$, $\mathbf{B}$
 
-* **Source of of uncertainty**: $\vec{\omega}$
-
 * **State transition model**: $\mathbf{F}(t)$, $\mathbf{Q}$
+
+* **External source of of uncertainty**: $\vec{\omega}$
 
 ## Correction phase
 
@@ -585,13 +588,38 @@ $$
 
 * **State vector predicted**: $\vec{x_p}$, $\mathbf{P_p}$
 
-* **Measurements**: $\vec{z}$, $\mathbf{R}$, $\mathbf{H}$
+* **Measurements**: $\vec{z}$, $\mathbf{R}$, $\mathbf{H}$, $\vec{v}$
 
-* **Filter bias**: $\mathbf{K}$
+* **Kalman gain**: $\mathbf{K}$
 
 ## Example
 
-Governement example
+The following is a metaphorical example which, hoepfully, should help the reader grasp the meaning of each parts of the Kalman filter.
+
+Let say that your brain is the hardware, and the software the Kalman filter. Your goal is to estimate the state of the world. For that you have at your disposal:
+
+* The official informations about the world
+* Your model of the functionning world
+* The actions you do to change the world
+* Your observations about the world
+
+Which gave you the following system:
+
+!["Kalman filter, world example"](img/kalman_example.png)
+
+To estimate the state of the world ($\vec{x}(t)$) in 10 years ($\Delta t$), you start from the current state of the world. Of course, as you are not omniscien, there is things you are unsure about that present state ($\mathbf{P}$).
+
+You listen to the TV, read some articles and build your model about how the world seems to be transforming ($\mathbf{F}$), and because you are not an augur you have a main line with a few variations depending on what your model can't account for ($\mathbf{Q}$).
+
+In addition, because you are one of the wealthiest man on Earth, you account for the actions you are taking to change the world ($\vec{u}$) and apply that knowledge into your prediction ($\mathbf{B}$).
+
+But sadly, you can't be 100% sure of the success of your endeavours or their consequences, and as we said earlier, you are rich but not omniscient: there is a lot you don't know, misunderstood or even been lied about ($\vec{\omega}$).
+
+Once your prediction made about the futur is done, you go enquire about a how the world is doing ($\vec{z}$) directly, indirectly in some ways you can relate to your present predictions ($\mathbf{H}$). But once again, your informations are not always trusty, complete or intelligible ($\mathbf{R}$ and $\vec{v}$).
+
+Once you got your predictions and you measurements made, you balance each others regarding the quality of the sources of information that allowed you to make those up, and give more importance to the trustier one ($\mathbf{K}$).
+
+You end up with the best estimate you can come up to, of what will be the world in 10 years: that was one iteration of your mental Kalman estimator, also called Kalman filter. 
 
 # Sources and recommended reads
 
