@@ -29,18 +29,18 @@ An attempt at demystifying the application of the Kalman filter, in order to sto
         1. [Prediction](#prediction)
         2. [Correction/Update](#correction/update)
     3. [Terms definitions](#terms-definitions)
-        1. [$x$ : State vector]()
-        2. [$\mathbf{P}$ : Covariance matrix of the state vector $\vec{x}$]()
-        3. [$\mathbf{K}$ : Kalman gain]()
-        4. [$\vec{z}$ : Measurement vector]()
-        5. [$\mathbf{F}$ : State transition model]()
-        6. [$\mathbf{Q}$ : Covariance matrix of the process noise]()
-        7. [$\mathbf{H}$ : Measurement matrix]()
-        8. [$\vec{v}$ : Measurement noise]()
-        9. [$\mathbf{R}$ : Covariance matrix of the sensor noise]()
-        10. [$\vec{u}$ : Control vector]()
-        11. [$\mathbf{B}$ : Control matrix]()
-        12. [$\vec{\omega}$ : External noise, sources of uncertainity]()
+        1. [x \: State vector](#state-vector)
+        2. [P : Covariance matrix of the state vector $\vec{x}$](#P)
+        3. [K : Kalman gain](#K)
+        4. [z : Measurement vector](#z)
+        5. [F : State transition model](#F)
+        6. [Q : Covariance matrix of the process noise](#Q)
+        7. [H : Measurement matrix](#H)
+        8. [v : Measurement noise](#v)
+        9. [R : Covariance matrix of the sensor noise](#R)
+        10. [u : Control vector](#u)
+        11. [B : Control matrix](#B)
+        12. [w : External noise, sources of uncertainity](#w)
 6. [Initialisation of the Kalman filter](#initialisation-of-the-kalman-filter)
 7. [Diagram and example](#diagram-and-example)
 8. [Sources and recommended reads](#sources-and-recommended-reads)
@@ -147,7 +147,7 @@ The following domains can be of interest in the task of developping adequat valu
 * Non-linear modelling
 * Time variant modelling
 
-### $x$ : State vector
+### $x$ : State vector [](#state-vector)
 
 It is of the form:
 
