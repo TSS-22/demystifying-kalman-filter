@@ -1,16 +1,10 @@
-# TODO
-
 * Finish cleaning the main example file
-
-* Add table of content
 
 * Add the governement example
 
 * Add a readme to the example
 
 * Check that the example still work from the get go on matlab
-
-* Add a "variable is of the form" example where possible for each variable (go through the example matlab files to do that)
 
 # The myth, the Kalman, the legend: The Kalman filter
 
@@ -42,7 +36,7 @@ An attempt at demystifying the application of the Kalman filter, in order to sto
         11. [B : Control matrix](#control-matrix)
         12. [w : External noise, sources of uncertainity](#external-noise-sources-of-uncertainity)
 6. [Initialisation of the Kalman filter](#initialisation-of-the-kalman-filter)
-7. [Diagram and example](#diagram-and-example)
+7. [Diagram summary and meta-example](#diagram-summary-and-meta-example)
 8. [Sources and recommended reads](#sources-and-recommended-reads)
 
 
@@ -527,11 +521,77 @@ The initial value of the state vector $\vec{x}$ really has this very obvious arb
 
 Learn your system, study it. And just try. Build a safe and adequat experimental setup to be able to try out hypothesis about your system, your application and their practical application. Fail there rather than when guiding that multi millions rocket. Taxpayer around your country will thank you.
 
-# Diagram and example
+# Diagram summary and meta-example
 
-example with the governement
+Below is a little diagram followed by the variables associated to each components.
 
 ![Kalman filter diagram](kalman_diagrams.png)
+
+## Prediction phase
+
+### Equation
+
+1. 
+$$
+\begin{equation}
+x_p = \mathbf{F(t)} \cdot \vec{x}(t) + \mathbf{B(t)} \cdot \vec{u}(t) + \vec{\omega}
+\end{equation}
+$$
+
+
+2.
+$$
+\begin{equation}
+\mathbf{P_p} = \mathbf{F(t)} \cdot \mathbf{P(t)} \cdot \mathbf{F(t)}^{T} + \mathbf{Q(t)}
+\end{equation}
+$$
+
+### Variables 
+
+* **State vector**: $\vec{x}(t)$, $\mathbf{P}(t)$
+
+* **Control**: $\vec{u}(t)$, $\mathbf{B}$
+
+* **Source of of uncertainty**: $\vec{\omega}$
+
+* **State transition model**: $\mathbf{F}(t)$, $\mathbf{Q}$
+
+## Correction phase
+
+### Equation
+
+3.
+$$
+\begin{equation}
+\mathbf{K} = \mathbf{P_p} \cdot \mathbf{H}^T \cdot (\mathbf{H} \cdot \mathbf{P_p} \cdot \mathbf{H}^T + \mathbf{R})^{-1}
+\end{equation}
+$$
+
+4.
+$$
+\begin{equation}
+\vec{x_c} = \vec{x_p} + \mathbf{K} \cdot (\vec{z} - \mathbf{H} \cdot \vec{x_p})
+\end{equation}
+$$
+
+5.
+$$
+\begin{equation}
+\mathbf{P_c} = \mathbf{P_p} - \mathbf{K} \cdot \mathbf{H} \cdot \mathbf{P_p}
+\end{equation}
+$$
+
+### Variables
+
+* **State vector predicted**: $\vec{x_p}$, $\mathbf{P_p}$
+
+* **Measurements**: $\vec{z}$, $\mathbf{R}$, $\mathbf{H}$
+
+* **Filter bias**: $\mathbf{K}$
+
+## Example
+
+Governement example
 
 # Sources and recommended reads
 
