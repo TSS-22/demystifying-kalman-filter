@@ -28,7 +28,7 @@ R = 0.5 * eye(4); % Covariance matrix of the sensor noise
 P0 = 0.01 * eye(4); % Initial value of the covariance matrix of the state vector
 
 %% OPEN AND LOAD DATA
-data = csvread("data\data.csv");
+data = csvread("data\data.csv",1,0);
 
 timeStamps = data(:,1);
 stillness = data(:,2); % This seems to be linked to the overall level of the movement of the IMU
@@ -54,6 +54,10 @@ end
 H = eye(4); % Measurement matrix
 x = [1 0 0 0]'; % Initial state vector
 P = P0; % Associated covariance matrix of the state vector
+
+% We don't have any control in this example but we still implemented
+% the control part of the Kalman filter as to make it available for the
+% users. As well as to make its flow easier to understand
 % As there are no control input in our system,
 % Control vector and associated Control matrix are set to zero
 u = zeros(nbSamples,1);
@@ -65,11 +69,11 @@ B = [0; 0; 0; 0];
 %               store_K : Computed Kalman gain (diagonal only)
 %          store_angles : Angles from accelerometer readings
 % store_filtered_angles : Angles outputed by the Kalman filter
-store_X = zeros(4,nbSamples); 
-save_P = zeros(4,nbSamples);
-store_K = zeros(4,nbSamples); 
-store_angles = zeros(nbSamples,3);
-store_filtered_angles = zeros(nbSamples,3);
+store_X = zeros(4,nbSamples-1); 
+save_P = zeros(4,nbSamples-1);
+store_K = zeros(4,nbSamples-1); 
+store_angles = zeros(nbSamples-1,3);
+store_filtered_angles = zeros(nbSamples-1,3);
 
 %% KALMAN FILTER
 for t=1:1:(nbSamples-1)
@@ -121,7 +125,7 @@ for t=1:1:(nbSamples-1)
     ];
 
     % KALMAN FILTER ITERATION
-    [P_c, x_c, K] = one_dim_kalmanfilt(F,G,Q,H,R,P,x,u,z);
+    [x_c, P_c, K] = one_dim_kalmanfilt(x, P, F, B, u(t), Q, H, R, z);
     
     % Clarify that step
     filtered_roll = atan2(2*(x_c(3)*x_c(4) + x_c(1)*x_c(2)) ,...
@@ -188,13 +192,13 @@ figure;
 % Angula speed in radian per seconds
 sp(1)=subplot(4,1,1); hold on;
 
-plot(timeStamps,-data_gyr(:,3),'Color',gray6,'Linewidth',1);
-plot(timeStamps,-data_gyr(:,1),'k--','Linewidth',1);
-plot(timeStamps,data_gyr(:,2),'r','Linewidth',1);
+plot(timeStamps(1:end-1),-data_gyr(1:end-1,3),'Color',gray6,'Linewidth',1);
+plot(timeStamps(1:end-1),-data_gyr(1:end-1,1),'k--','Linewidth',1);
+plot(timeStamps(1:end-1),data_gyr(1:end-1,2),'r','Linewidth',1);
 
 title('Gyroscope Measurement');
 ylabel('Ang Vel(rad/s)');
-axis([timeStamps(1) timeStamps(end) -3 3]);
+axis([timeStamps(1) timeStamps(end-1) -3 3]);
 set(gca,'Xtick',0:2:50);
 legend('Roll','Pitch','Yaw','Location','BestOutside');
 
@@ -203,42 +207,42 @@ legend('Roll','Pitch','Yaw','Location','BestOutside');
 grid on;
 sp(2)=subplot(4,1,2); hold on;
 
-plot(timeStamps,store_angles(:,1),'Color',gray6,'Linewidth',1.5);
-plot(timeStamps,store_angles(:,2),'k--','Linewidth',1.5);
+plot(timeStamps(1:end-1),store_angles(:,1),'Color',gray6,'Linewidth',1.5);
+plot(timeStamps(1:end-1),store_angles(:,2),'k--','Linewidth',1.5);
 
 title('Euler Angles from Accelerometer Measurement');
 ylabel('Angles (deg)');
-axis([timeStamps(1) timeStamps(end) -180 180]);
+axis([timeStamps(1) timeStamps(end-1) -180 180]);
 set(gca,'Ytick',-180:45:180,'Xtick',0:2:50);
-legend('roll(\roll)','pitch(\pitch)','Location','BestOutside');
+legend('roll(\phi)','pitch(\theta)','Location','BestOutside');
 
 % Euler angles of the displacement computed from the accelerometer
 % and filtered by the Kalman filter
 grid on;
 sp(3)=subplot(4,1,3); hold on;
 
-plot(timeStamps,filtered_PTP(:,1),'Color',gray6,'Linewidth',1.5);
-plot(timeStamps,filtered_PTP(:,2),'k--','Linewidth',1.5);
+plot(timeStamps(1:end-1),filtered_PTP(:,1),'Color',gray6,'Linewidth',1.5);
+plot(timeStamps(1:end-1),filtered_PTP(:,2),'k--','Linewidth',1.5);
 
 title('Euler Angles Output from Kalman Filter');
 xlabel('Time (seconds)');
 ylabel('Angles (deg)');
-axis([timeStamps(1) timeStamps(end) -180 180]);
+axis([timeStamps(1) timeStamps(end-1) -180 180]);
 set(gca,'Ytick',-180:45:180,'Xtick',0:2:50);
-legend('roll(\roll)','pitch(\pitch)','Location','BestOutside');
+legend('roll(\phi)','pitch(\theta)','Location','BestOutside');
 
 % The state of the system as estimated and corrected by the Kalman filter
 grid on;
 sp(4)=subplot(4,1,4); hold on;
 
-plot(timeStamps,filtered_quaternion(:,1),'b','Linewidth',1);
-plot(timeStamps,filtered_quaternion(:,2),'k--','Linewidth',1);
-plot(timeStamps,filtered_quaternion(:,3),'Color',gray6,'Linewidth',1);
-plot(timeStamps,filtered_quaternion(:,4),'r','Linewidth',1);
+plot(timeStamps(1:end-1),filtered_quaternion(:,1),'b','Linewidth',1);
+plot(timeStamps(1:end-1),filtered_quaternion(:,2),'k--','Linewidth',1);
+plot(timeStamps(1:end-1),filtered_quaternion(:,3),'Color',gray6,'Linewidth',1);
+plot(timeStamps(1:end-1),filtered_quaternion(:,4),'r','Linewidth',1);
 
 title('Quaternion Output from Kalman Filter');
 xlabel('Time (seconds)');
-axis([timeStamps(1) timeStamps(end) -1.1 1.1]);
+axis([timeStamps(1) timeStamps(end-1) -1.1 1.1]);
 set(gca,'Xtick',0:2:50);
 legend('w','x','y','z','Location','BestOutside');
 
