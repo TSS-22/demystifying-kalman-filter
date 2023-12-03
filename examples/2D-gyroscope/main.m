@@ -22,7 +22,7 @@ clear all
 % K : Kalman gain
 
 %% INITIALISATION
-% The matrix value below have been selected ad hoc by the author of the book
+% The matrix value below have been selected by the author of the book
 Q = 0.0001*eye(4); % Covariance matrix of the process noise
 R = 0.5 * eye(4); % Covariance matrix of the sensor noise
 P0 = 0.01 * eye(4); % Initial value of the covariance matrix of the state vector
@@ -40,8 +40,6 @@ data_quat = data(:,9:12); % Could be the state of the IMU in space, or the gyros
 %% PREPARE DATA FOR FILTERING
 nbSamples = length(timeStamps); % Sample number
 acqFreq = nbSamples/timeStamps(end); % acquisition frequency
-% Do not use this dt
-dt = 1/acqFreq; % THIS IS WRONG, dt is inconsistent
 
 % TO-CHECK
 % The author normalized the accelerometer data
