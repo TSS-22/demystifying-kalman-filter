@@ -293,6 +293,8 @@ As any other applications specific terms, you will have to provide it yourself, 
 
 This is the covariance matrix associated to the state transition model $\mathbf{F}$. It represents the uncertainty, or simply the variability, of the model $\mathbf{F}$ and the associated prediction. The larger the values composing $\mathbf{Q}$, the more variability, uncertainty, is present in the state transition model $\mathbf{F}$. And therefore, the less trust is put in it, and his weight into the calculus of the filtered value will be lowered.
 
+More broadly, it is considered link to the uncertainity in the **update** step. And therefore is link to the control ($\vec{u}$, $\mathbf{B}$) and the external noise $\vec{\omega}$.
+
 One way to solve the problem in a brute force manner might be to establish this parameter through some sort of [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent).
 
 To avoid accounting for any uncertainty in the state transition model $\mathbf{F}$, it is always possible to resort to the use of a zero matrix, $\mathbf{0}$ of adequat size.
@@ -426,11 +428,11 @@ This represent the control applied to the system of interest, susceptible to cha
 
 For example, suppose our system is a free falling rocket. The state vector $\vec{x}$ representing the position, the controle vector $\vec{u}$ would be the acceleration applied by the rocket thrust engines, and applying changes to the system outside of its premiere definition : a free falling object, a system with constant parameters.
 
-It works a bit in the same way as the measurement matrix $\mathbf{H}$ in that it maps the control vector $\vec{u}$ values to the state space of the state vector $\vec{x}$ as well as the magnitude of the influence of the control vector $\vec{u}$.
-
 ### $\mathbf{B}$ : Control matrix
 
 The control matrix $\mathbf{B}$ maps the control vector $\vec{u}$ to the state space of the state vector $\vec{x}$ and define, scale, the magnitude of the impact of the control vector $\vec{u}$ inputs, values.
+
+It works a bit in the same way as the measurement matrix $\mathbf{H}$ in that it maps the control vector $\vec{u}$ values to the state space of the state vector $\vec{x}$ as well as the magnitude of the influence of the control vector $\vec{u}$.
 
 It is sometimes called $\mathbf{G}$ in ressources on Kalman filter.
 

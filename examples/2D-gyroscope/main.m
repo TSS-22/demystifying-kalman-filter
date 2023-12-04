@@ -41,9 +41,8 @@ data_quat = data(:,9:12); % Could be the state of the IMU in space, or the gyros
 nbSamples = length(timeStamps); % Sample number
 acqFreq = nbSamples/timeStamps(end); % acquisition frequency
 
-% TO-CHECK
-% The author normalized the accelerometer data
-% it might be for the quaternion transformation
+% The accelerometer data are normalized
+% according to Yun et al., 2008
 for i=1:1:nbSamples 
     data_acc_norm(i,:) = data_acc(i,:)./norm(data_acc(i,:));
 end
@@ -85,6 +84,7 @@ for t=1:1:(nbSamples-1)
     gyr_y = data_gyr(t,2);
     gyr_z = -data_gyr(t,3);
     
+    % TO-CHECK
     % How to find Omega 
     omega_mat = [
       0     -gyr_z  -gyr_x  -gyr_y
