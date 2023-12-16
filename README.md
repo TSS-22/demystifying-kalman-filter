@@ -31,7 +31,7 @@ An attempt at demystifying the application of the Kalman filter, in order to sto
 7. [Diagram summary and meta-example](#diagram-summary-and-meta-example)
 8. [How to cite](#how-to-cite)
 9. [Sources and recommended reads](#sources-and-recommended-reads)
-10. [Disclaimer](#disclaimer)
+10. [Legal disclaimer](#legal-disclaimer)
 
 
 
@@ -637,6 +637,6 @@ The rumors say that **Anna** got them in her **archive**.
 
 * [How to understand Kalman gain intuitively?](https://dsp.stackexchange.com/questions/2347/how-to-understand-kalman-gain-intuitively). Answers: Jav_Rock, Zichao Zhang, ssk08. June 2012.<br> A nice view at the Kalman gain behavior to understand its mathematical purpose.
 
-# Disclaimer
+# Legal disclaimer
 
 The information and tools contained in this repository are provided in good faith and no warranty, representation, statement or undertaking is given regarding any information or tool connected with this repository and any warranty, representation, statement or undertaking whatsoever that may be expressed or implied by statute, custom or otherwise is hereby expressly excluded. The use of the tools in this repository and any information in this repository is entirely at the risk of the user. Under no other circumstances the author should be liable for any costs, losses, expenses or damages (whether direct or indirect, consequential, special, economic or financial including any loss of profits) whatsoever that may be incurred through the use of any information or tools contained in this repository. This repository may contain inaccurate information. Which the author is under no responsibility to update or correct any such information or to even maintain this repository. Which the author reserves its right to change any information or any part of this repository without notice.
