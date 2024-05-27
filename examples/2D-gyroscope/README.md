@@ -146,10 +146,6 @@ a_x=g\sin(\theta)
 $$
 
 $$
-a_z=g\sin(\theta)
-$$
-
-$$
 a_y=-g\cos(\theta)\sin(\phi)
 $$
 
