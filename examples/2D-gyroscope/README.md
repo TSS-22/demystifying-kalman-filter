@@ -159,12 +159,9 @@ a_z=-g\cos(\theta)\sin(\phi)
 $$
 
 Normalized, by gravity, equations: 
-$$
-\bar{a_x}=\sin(\theta)
-$$
 
 $$
-\bar{a_z}=\sin(\theta)
+\bar{a_x}=\sin(\theta)
 $$
 
 $$
