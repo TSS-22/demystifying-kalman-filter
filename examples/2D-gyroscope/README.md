@@ -33,6 +33,8 @@ TO DO:
 
 Euler to quaternion equation
 
+https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Euler_angles_(in_3-2-1_sequence)_to_quaternion_conversion
+
 $$
 \mathbf{q} = [w,(x,y,z)]
 $$
